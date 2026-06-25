@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-gray-100 font-sans antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-dark-card border border-dark-border rounded-xl p-6;
+  }
+
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply bg-dark-hover hover:bg-dark-border text-gray-300 font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .input {
+    @apply bg-dark-hover border border-dark-border text-gray-100 placeholder-gray-500 rounded-lg px-4 py-2.5 w-full focus:outline-none focus:border-accent transition-colors duration-200;
+  }
+
+  .badge-todo {
+    @apply bg-gray-800 text-gray-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+
+  .badge-in-progress {
+    @apply bg-indigo-900/50 text-accent-light text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+
+  .badge-done {
+    @apply bg-emerald-900/50 text-emerald-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+
+  .badge-low {
+    @apply bg-gray-800 text-gray-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+
+  .badge-medium {
+    @apply bg-amber-900/50 text-amber-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+
+  .badge-high {
+    @apply bg-red-900/50 text-red-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+}
