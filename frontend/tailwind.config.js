@@ -8,19 +8,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Dark sidebar palette
         sidebar: {
-          bg: '#0f1117',
-          border: '#1e2130',
+          bg: '#000000',
+          border: '#1a1a1a',
         },
-        // Main content area
         dark: {
-          bg: '#13151f',
-          card: '#1a1d2e',
-          hover: '#1f2237',
-          border: '#252840',
+          bg: '#0d0d0d',
+          card: '#141414',
+          hover: '#1a1a1a',
+          border: '#242424',
         },
-        // Brand accent
         accent: {
           DEFAULT: '#6366f1',
           hover: '#4f46e5',

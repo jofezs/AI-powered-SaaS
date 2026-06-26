@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import { errorHandler, AppError } from './middleware/errorHandler';
 import authRouter from './routes/authRoutes';
 import taskRouter from './routes/taskRoutes';
+import aiRouter from './routes/aiRoutes';
 
 const app: Application = express();
 
@@ -51,6 +52,7 @@ app.get('/api/health', (_req: Request, res: Response) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/tasks', taskRouter);
+app.use('/api/ai', aiRouter);
 
 app.use((_req: Request, _res: Response, next: NextFunction) => {
   next(new AppError(`Route not found`, 404));
