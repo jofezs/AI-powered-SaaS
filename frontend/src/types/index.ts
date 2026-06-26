@@ -21,8 +21,7 @@ export interface Subtask {
 }
 
 export interface Task {
-  _id: string;
-  user: string;
+  id?: string;
   title: string;
   description?: string;
   status: TaskStatus;

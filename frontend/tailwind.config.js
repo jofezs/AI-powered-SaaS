@@ -8,23 +8,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        sidebar: {
-          bg: '#000000',
-          border: '#1a1a1a',
+        bark: {
+          darkest: '#2a1a0a',
+          dark:    '#3b2412',
+          mid:     '#5a3e28',
+          light:   '#8b5e2a',
+          pale:    '#c9a470',
+          cream:   '#f5d9a8',
         },
-        dark: {
-          bg: '#0d0d0d',
-          card: '#141414',
-          hover: '#1a1a1a',
-          border: '#242424',
-        },
-        accent: {
-          DEFAULT: '#6366f1',
-          hover: '#4f46e5',
-          light: '#818cf8',
+        parchment: {
+          DEFAULT: '#fdf8e1',
+          dark:    '#f5efcc',
+          line:    '#d4c9a0',
+          border:  '#d4b896',
         },
       },
       fontFamily: {
+        serif: ['Georgia', 'Cambria', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
     },

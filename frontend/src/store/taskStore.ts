@@ -8,6 +8,7 @@ interface CreateTaskInput {
   status?: TaskStatus;
   priority?: TaskPriority;
   dueDate?: string;
+  subtasks?: { title: string; completed: boolean }[];
 }
 
 interface UpdateTaskInput extends Partial<CreateTaskInput> {
@@ -56,7 +57,7 @@ export const useTaskStore = create<TaskState>((set) => ({
       const res = await api.patch(`/tasks/${id}`, input);
       set((state) => ({
         tasks: state.tasks.map((t) =>
-          t._id === id ? res.data.data.task : t
+          t.id === id ? res.data.data.task : t
         ),
       }));
     } catch {
@@ -69,7 +70,7 @@ export const useTaskStore = create<TaskState>((set) => ({
     try {
       await api.delete(`/tasks/${id}`);
       set((state) => ({
-        tasks: state.tasks.filter((t) => t._id !== id),
+        tasks: state.tasks.filter((t) => t.id !== id),
       }));
     } catch {
       set({ error: 'Failed to delete task' });

@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Zap } from 'lucide-react';
+import { PenLine } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
 
 const SignupPage = () => {
   const { signup, isLoading } = useAuthStore();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,31 +37,36 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen lined-paper flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+
         {/* Logo */}
         <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-9 h-9 bg-accent rounded-lg flex items-center justify-center">
-            <Zap size={18} className="text-white" />
+          <div className="w-9 h-9 bg-bark-dark rounded-lg flex items-center justify-center">
+            <PenLine size={18} className="text-bark-cream" />
           </div>
-          <span className="text-white font-semibold text-xl">WorkspaceAI</span>
+          <span className="text-bark-dark font-serif font-bold text-xl tracking-tight">
+            WorkspaceAI
+          </span>
         </div>
 
         {/* Card */}
-        <div className="card">
-          <h1 className="text-white font-bold text-2xl mb-1">Create an account</h1>
-          <p className="text-gray-500 text-sm mb-6">
+        <div className="bg-white/80 border border-parchment-border rounded-lg px-6 py-7">
+          <h1 className="font-serif font-bold text-bark-dark text-xl italic mb-1">
+            Create an account
+          </h1>
+          <p className="text-bark-pale font-serif text-sm mb-6">
             Start managing your tasks smarter
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-xs font-serif text-bark-mid mb-1.5">
                 Name
               </label>
               <input
                 type="text"
-                className="input"
+                className="input-parchment"
                 placeholder="John Doe"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -65,12 +75,12 @@ const SignupPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-xs font-serif text-bark-mid mb-1.5">
                 Email
               </label>
               <input
                 type="email"
-                className="input"
+                className="input-parchment"
                 placeholder="you@example.com"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -79,12 +89,12 @@ const SignupPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
+              <label className="block text-xs font-serif text-bark-mid mb-1.5">
                 Password
               </label>
               <input
                 type="password"
-                className="input"
+                className="input-parchment"
                 placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -93,15 +103,17 @@ const SignupPage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1.5">
-                Confirm Password
+              <label className="block text-xs font-serif text-bark-mid mb-1.5">
+                Confirm password
               </label>
               <input
                 type="password"
-                className="input"
+                className="input-parchment"
                 placeholder="••••••••"
                 value={form.confirmPassword}
-                onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, confirmPassword: e.target.value })
+                }
                 required
               />
             </div>
@@ -109,22 +121,29 @@ const SignupPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="btn-primary w-full py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-bark w-full py-2.5 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Creating account...' : 'Create account'}
             </button>
           </form>
 
-          <p className="text-gray-500 text-sm text-center mt-6">
-            Already have an account?{' '}
-            <Link
-              to="/login"
-              className="text-accent-light hover:text-accent transition-colors"
-            >
-              Sign in
-            </Link>
-          </p>
+          <div className="mt-6 pt-5 border-t border-parchment-border text-center">
+            <p className="text-bark-pale font-serif text-sm">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="text-bark-light hover:text-bark-dark underline underline-offset-2 transition-colors"
+              >
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
+
+        {/* Footer note */}
+        <p className="text-center text-bark-pale font-serif italic text-xs mt-5">
+          Your tasks, your pace.
+        </p>
       </div>
     </div>
   );

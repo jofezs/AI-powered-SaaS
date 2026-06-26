@@ -2,68 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 @layer base {
+  html {
+    font-size: 125%; /* ← this scales all rem-based sizes by 1.5x */
+  }
   body {
-    @apply bg-dark-bg text-gray-100 font-sans antialiased;
+    @apply bg-parchment font-serif text-bark-darkest antialiased;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-dark-bg;
+    @apply bg-parchment;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-border rounded-full;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-accent;
+    @apply bg-parchment-border rounded-full;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-dark-card border border-dark-border rounded-xl p-6;
+  /* Ruled paper lines on the main area */
+  .lined-paper {
+      background-color: #fdf8e1;
+      background-image: repeating-linear-gradient(to bottom,
+          transparent,
+          transparent 27px,
+          #e0d8b0 27px,
+          /* ← was #d4c9a0, slightly lighter */
+          #e0d8b0 28px);
+      background-attachment: local;
+    }
+
+  .card-task {
+    @apply bg-white/80 border border-parchment-border rounded-md p-3 mb-3;
   }
 
-  .btn-primary {
-    @apply bg-accent hover:bg-accent-hover text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  .btn-bark {
+    @apply bg-bark-dark hover:bg-bark-darkest text-bark-cream font-serif text-sm px-4 py-2 rounded transition-colors duration-150;
   }
 
-  .btn-secondary {
-    @apply bg-dark-hover hover:bg-dark-border text-gray-300 font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  .btn-bark-outline {
+    @apply border border-bark-mid text-bark-mid hover:bg-bark-mid hover:text-bark-cream font-serif text-sm px-4 py-2 rounded transition-colors duration-150;
   }
 
-  .input {
-    @apply bg-dark-hover border border-dark-border text-gray-100 placeholder-gray-500 rounded-lg px-4 py-2.5 w-full focus:outline-none focus:border-accent transition-colors duration-200;
-  }
-
-  .badge-todo {
-    @apply bg-gray-800 text-gray-400 text-xs font-medium px-2.5 py-1 rounded-full;
-  }
-
-  .badge-in-progress {
-    @apply bg-indigo-900/50 text-accent-light text-xs font-medium px-2.5 py-1 rounded-full;
-  }
-
-  .badge-done {
-    @apply bg-emerald-900/50 text-emerald-400 text-xs font-medium px-2.5 py-1 rounded-full;
-  }
-
-  .badge-low {
-    @apply bg-gray-800 text-gray-400 text-xs font-medium px-2.5 py-1 rounded-full;
-  }
-
-  .badge-medium {
-    @apply bg-amber-900/50 text-amber-400 text-xs font-medium px-2.5 py-1 rounded-full;
+  .input-parchment {
+    @apply bg-parchment border border-parchment-border text-bark-darkest placeholder-bark-pale rounded px-3 py-2 w-full focus:outline-none focus:border-bark-light font-serif text-sm transition-colors duration-150;
   }
 
   .badge-high {
-    @apply bg-red-900/50 text-red-400 text-xs font-medium px-2.5 py-1 rounded-full;
+    @apply bg-red-100 text-red-800 text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide;
+  }
+
+  .badge-medium {
+    @apply bg-amber-100 text-amber-800 text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide;
+  }
+
+  .badge-low {
+    @apply bg-green-100 text-green-800 text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full uppercase tracking-wide;
   }
 }

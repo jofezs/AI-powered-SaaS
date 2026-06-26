@@ -7,7 +7,7 @@ import { AuthenticatedRequest, TaskStatus, TaskPriority } from '../types';
 
 export const createTask = catchAsync(
   async (req: AuthenticatedRequest, res: Response, _next: NextFunction): Promise<void> => {
-    const { title, description, status, priority, dueDate } = req.body;
+    const { title, description, status, priority, dueDate, subtasks } = req.body;
 
     if (!title) {
       throw new AppError('Task title is required', 400);
@@ -20,6 +20,7 @@ export const createTask = catchAsync(
       status: status || TaskStatus.TODO,
       priority: priority || TaskPriority.MEDIUM,
       dueDate: dueDate ? new Date(dueDate) : undefined,
+      subtasks: subtasks ?? [],           // ← add this line
     });
 
     res.status(201).json({
@@ -46,7 +47,7 @@ export const getTasks = catchAsync(
 
     const tasks = await Task.find(filter)
       .sort({ [sortField]: sortOrder })
-      .lean(); // .lean() returns plain JS objects instead of Mongoose documents
+      // .lean(); // .lean() returns plain JS objects instead of Mongoose documents
                 // significantly faster for read-only operations
 
     res.status(200).json({

@@ -8,14 +8,22 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export const chatWithAI = catchAsync(async (req: AuthenticatedRequest, res: Response) => {
   const { messages, systemPrompt } = req.body;
 
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [{ role: 'system', content: systemPrompt }, ...messages],
-    max_tokens: 1000,
-  });
+  console.log('API KEY exists:', !!process.env.OPENAI_API_KEY);
+  console.log('Messages received:', messages?.length);
 
-  res.status(200).json({
-    success: true,
-    data: { reply: completion.choices[0].message.content },
-  });
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'system', content: systemPrompt }, ...messages],
+      max_tokens: 1000,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: { reply: completion.choices[0].message.content },
+    });
+  } catch (err: unknown) {
+    console.error('OpenAI error:', err);
+    throw err;
+  }
 });
