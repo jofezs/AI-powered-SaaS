@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Trash2, Zap } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { useTaskStore } from '../store/taskStore';
 import api from '../lib/axios';
 import toast from 'react-hot-toast';
@@ -165,13 +166,45 @@ const AIAssistantPage = () => {
 
             {/* Bubble */}
             <div
-              className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+              className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                 message.role === 'assistant'
                   ? 'bg-dark-card border border-dark-border text-gray-200 rounded-tl-sm'
-                  : 'bg-accent text-white rounded-tr-sm'
+                  : 'bg-accent text-white rounded-tr-sm whitespace-pre-wrap'
               }`}
             >
-              {message.content}
+              {message.role === 'assistant' ? (
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                    ul: ({ children }) => <ul className="list-disc pl-4 mb-2 last:mb-0 space-y-1">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-4 mb-2 last:mb-0 space-y-1">{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
+                    strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+                    code: ({ className, children, ...props }) => {
+                      const match = /language-(\w+)/.exec(className || '');
+                      const inline = !match;
+                      return inline ? (
+                        <code className="bg-dark-hover px-1.5 py-0.5 rounded font-mono text-xs text-accent-light" {...props}>
+                          {children}
+                        </code>
+                      ) : (
+                        <pre className="bg-dark-hover p-3 rounded-lg overflow-x-auto font-mono text-xs my-2 border border-dark-border">
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      );
+                    },
+                    h1: ({ children }) => <h1 className="text-base font-bold my-2 text-white">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-sm font-bold my-2 text-white">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-xs font-bold my-2 text-white">{children}</h3>,
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              ) : (
+                message.content
+              )}
             </div>
           </div>
         ))}

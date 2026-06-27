@@ -17,13 +17,15 @@ const DashboardPage = () => {
   }, [fetchTasks]);
 
   // Only non-done tasks shown as cards, sorted by priority then due date
-  const projectTasks = [...tasks].sort((a, b) => {
-    const pOrder = { high: 0, medium: 1, low: 2 };
-    const pd = (pOrder[a.priority] ?? 1) - (pOrder[b.priority] ?? 1);
-    if (pd !== 0) return pd;
-    if (a.dueDate && b.dueDate) return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
-    return 0;
-  });
+  const projectTasks = tasks
+    .filter((t) => t.status !== 'done')
+    .sort((a, b) => {
+      const pOrder = { high: 0, medium: 1, low: 2 };
+      const pd = (pOrder[a.priority] ?? 1) - (pOrder[b.priority] ?? 1);
+      if (pd !== 0) return pd;
+      if (a.dueDate && b.dueDate) return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      return 0;
+    });
 
   return (
     <div className="flex h-screen overflow-hidden">

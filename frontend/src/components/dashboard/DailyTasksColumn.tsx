@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import { useDailyTaskStore } from '../../store/dailyTaskStore';
+import ConfirmationModal from '../ui/ConfirmationModal';
 
 const DailyTasksColumn = () => {
   const { tasks, addTask, toggleTask, deleteTask, resetIfNewDay } = useDailyTaskStore();
   const [newTitle, setNewTitle] = useState('');
   const [adding, setAdding] = useState(false);
+  const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null);
 
   useEffect(() => {
     resetIfNewDay();
@@ -58,7 +60,7 @@ const DailyTasksColumn = () => {
               {task.title}
             </span>
             <button
-              onClick={() => deleteTask(task.id)}
+              onClick={() => setTaskToDeleteId(task.id)}
               className="opacity-0 group-hover:opacity-100 text-bark-pale hover:text-red-600 transition-all"
             >
               <Trash2 size={11} />
@@ -68,52 +70,59 @@ const DailyTasksColumn = () => {
       </div>
 
       {/* Add task */}
-      {tasks.length < 10 && (
-        <div className="mt-3">
-          {adding ? (
-            <div className="space-y-1.5">
-              <input
-                autoFocus
-                type="text"
-                className="input-parchment text-xs py-1.5"
-                placeholder="Task name..."
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAdd();
-                  if (e.key === 'Escape') setAdding(false);
-                }}
-              />
-              <div className="flex gap-1.5">
-                <button onClick={handleAdd} className="btn-bark text-xs py-1 px-3">
-                  Add
-                </button>
-                <button
-                  onClick={() => setAdding(false)}
-                  className="btn-bark-outline text-xs py-1 px-3"
-                >
-                  Cancel
-                </button>
-              </div>
+      <div className="mt-3">
+        {adding ? (
+          <div className="space-y-1.5">
+            <input
+              autoFocus
+              type="text"
+              className="input-parchment text-xs py-1.5"
+              placeholder="Task name..."
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleAdd();
+                if (e.key === 'Escape') setAdding(false);
+              }}
+            />
+            <div className="flex gap-1.5">
+              <button onClick={handleAdd} className="btn-bark text-xs py-1 px-3">
+                Add
+              </button>
+              <button
+                onClick={() => setAdding(false)}
+                className="btn-bark-outline text-xs py-1 px-3"
+              >
+                Cancel
+              </button>
             </div>
-          ) : (
-            <button
-              onClick={() => setAdding(true)}
-              className="flex items-center gap-1.5 text-[11px] text-bark-pale hover:text-bark-light font-serif italic mt-1 transition-colors"
-            >
-              <Plus size={12} />
-              add daily task ({10 - tasks.length} left)
-            </button>
-          )}
-        </div>
-      )}
-
-      {tasks.length >= 10 && (
-        <p className="text-[10px] text-bark-pale italic mt-3 font-serif">
-          Daily limit of 10 reached.
-        </p>
-      )}
+          </div>
+        ) : (
+          <button
+            onClick={() => setAdding(true)}
+            className="flex items-center gap-1.5 text-[11px] text-bark-pale hover:text-bark-light font-serif italic mt-1 transition-colors"
+          >
+            <Plus size={12} />
+            add daily task
+          </button>
+        )}
       </div>
+      </div>
+
+      <ConfirmationModal
+        isOpen={taskToDeleteId !== null}
+        onClose={() => setTaskToDeleteId(null)}
+        onConfirm={() => {
+          if (taskToDeleteId) {
+            deleteTask(taskToDeleteId);
+            setTaskToDeleteId(null);
+          }
+        }}
+        title="Delete Daily Task"
+        message="Are you sure you want to delete this daily task? This action cannot be undone."
+        confirmText="Delete"
+        type="danger"
+      />
     </div>
   );
 };

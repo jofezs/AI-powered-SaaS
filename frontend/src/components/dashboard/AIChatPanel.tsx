@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Send, Bot, User } from 'lucide-react';
+import { X, Send, Bot, User, Zap } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { useTaskStore } from '../../store/taskStore';
 import api from '../../lib/axios';
 import toast from 'react-hot-toast';
+
+const suggestions = [
+  'Help me prioritize my tasks',
+  'Break down my high priority tasks',
+  'What should I focus on today?',
+  'Suggest subtasks for my in-progress work',
+];
 
 interface Message {
   role: 'user' | 'assistant';
@@ -89,12 +97,44 @@ const AIChatPanel = ({ onClose }: Props) => {
                 ? <Bot size={12} className="text-bark-cream" />
                 : <User size={12} className="text-bark-mid" />}
             </div>
-            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-[11px] font-serif leading-relaxed whitespace-pre-wrap ${
+            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-[11px] font-serif leading-relaxed ${
               msg.role === 'assistant'
                 ? 'bg-[#fffdf0] border border-parchment-border text-bark-darkest'
-                : 'bg-bark-dark text-bark-cream'
+                : 'bg-bark-dark text-bark-cream whitespace-pre-wrap'
             }`}>
-              {msg.content}
+              {msg.role === 'assistant' ? (
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="mb-1.5 last:mb-0">{children}</p>,
+                    ul: ({ children }) => <ul className="list-disc pl-3.5 mb-1.5 last:mb-0 space-y-0.5">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-3.5 mb-1.5 last:mb-0 space-y-0.5">{children}</ol>,
+                    li: ({ children }) => <li>{children}</li>,
+                    strong: ({ children }) => <strong className="font-semibold text-bark-dark">{children}</strong>,
+                    code: ({ className, children, ...props }) => {
+                      const match = /language-(\w+)/.exec(className || '');
+                      const inline = !match;
+                      return inline ? (
+                        <code className="bg-parchment-dark px-1 py-0.5 rounded font-mono text-[10px] text-bark-light" {...props}>
+                          {children}
+                        </code>
+                      ) : (
+                        <pre className="bg-parchment-dark p-2 rounded overflow-x-auto font-mono text-[10px] my-1 border border-parchment-border">
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        </pre>
+                      );
+                    },
+                    h1: ({ children }) => <h1 className="text-xs font-bold my-1 text-bark-dark">{children}</h1>,
+                    h2: ({ children }) => <h2 className="text-[11px] font-bold my-1 text-bark-dark">{children}</h2>,
+                    h3: ({ children }) => <h3 className="text-[10px] font-bold my-1 text-bark-dark">{children}</h3>,
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}
@@ -108,6 +148,23 @@ const AIChatPanel = ({ onClose }: Props) => {
               <span className="w-1.5 h-1.5 bg-bark-pale rounded-full animate-bounce [animation-delay:0ms]" />
               <span className="w-1.5 h-1.5 bg-bark-pale rounded-full animate-bounce [animation-delay:150ms]" />
               <span className="w-1.5 h-1.5 bg-bark-pale rounded-full animate-bounce [animation-delay:300ms]" />
+            </div>
+          </div>
+        )}
+        {messages.length === 1 && (
+          <div className="flex flex-col gap-1.5 mt-2">
+            <p className="text-[10px] text-bark-pale font-sans font-medium italic mb-0.5">Suggestions:</p>
+            <div className="grid grid-cols-1 gap-1.5">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setInput(s)}
+                  className="text-left text-[10px] font-sans text-bark-mid bg-[#fffdf0] border border-parchment-border hover:border-bark-mid hover:text-bark-darkest rounded-lg px-2.5 py-1.5 transition-colors duration-150 flex items-center gap-1.5"
+                >
+                  <Zap size={10} className="text-bark-light shrink-0" />
+                  {s}
+                </button>
+              ))}
             </div>
           </div>
         )}

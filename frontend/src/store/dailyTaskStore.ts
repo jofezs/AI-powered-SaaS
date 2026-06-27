@@ -35,7 +35,6 @@ export const useDailyTaskStore = create<DailyTaskState>()(
       },
 
       addTask: (title) => {
-        if (get().tasks.length >= 10) return;
         set((s) => ({
           tasks: [
             ...s.tasks,

@@ -1,8 +1,9 @@
-import { Calendar, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calendar, Trash2, ChevronDown, ChevronUp, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { Task } from '../../types';
 import { useTaskStore } from '../../store/taskStore';
 import toast from 'react-hot-toast';
+import ConfirmationModal from '../ui/ConfirmationModal';
 
 interface Props {
   task: Task;
@@ -17,6 +18,7 @@ const priorityColor: Record<string, string> = {
 const ProjectTaskCard = ({ task }: Props) => {
   const { updateTask, deleteTask } = useTaskStore();
   const [expanded, setExpanded] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const completedCount = task.subtasks.filter((s) => s.completed).length;
   const total = task.subtasks.length;
@@ -35,8 +37,17 @@ const ProjectTaskCard = ({ task }: Props) => {
     }
   };
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleComplete = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    try {
+      await updateTask(taskId, { status: 'done' });
+      toast.success('Task completed');
+    } catch {
+      toast.error('Failed to complete task');
+    }
+  };
+
+  const handleDelete = async () => {
     try {
       await deleteTask(taskId);
       toast.success('Task deleted');
@@ -59,12 +70,25 @@ const ProjectTaskCard = ({ task }: Props) => {
         <p className="text-xs font-serif font-semibold text-bark-darkest leading-snug flex-1">
           {task.title}
         </p>
-        <button
-          onClick={handleDelete}
-          className="opacity-0 group-hover:opacity-100 text-bark-pale hover:text-red-600 transition-all flex-shrink-0"
-        >
-          <Trash2 size={12} />
-        </button>
+        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all flex-shrink-0">
+          <button
+            onClick={handleComplete}
+            className="text-bark-pale hover:text-green-600 transition-colors"
+            title="Mark completed"
+          >
+            <Check size={13} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteConfirm(true);
+            }}
+            className="text-bark-pale hover:text-red-600 transition-colors"
+            title="Delete task"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
       </div>
 
       {/* Badges */}
@@ -141,6 +165,16 @@ const ProjectTaskCard = ({ task }: Props) => {
           ))}
         </div>
       )}
+
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={handleDelete}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmText="Delete"
+        type="danger"
+      />
     </div>
   );
 };
